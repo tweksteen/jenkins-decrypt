@@ -18,8 +18,7 @@ def main():
     usage()
 
   master_key = open(sys.argv[1]).read()
-  hudson_secret_key = open(sys.argv[2]).read()
-
+  hudson_secret_key = open(sys.argv[2], 'rb').read()
   hashed_master_key = sha256(master_key).digest()[:16]
   o = AES.new(hashed_master_key, AES.MODE_ECB)
   x = o.decrypt(hudson_secret_key)
