@@ -40,7 +40,7 @@ def decryptNewPassword(secret, p):
   fully_decrypted_blocks = decrypted_p[:-16]
   possibly_padded_block = decrypted_p[-16:]
   padding_length = possibly_padded_block[-1]
-  if padding_length < 16: # Less than size of one block, so we have padding
+  if padding_length <= 16: # Less than size of one block, so we have padding
     possibly_padded_block = possibly_padded_block[:-padding_length]
 
   pw = fully_decrypted_blocks + possibly_padded_block
