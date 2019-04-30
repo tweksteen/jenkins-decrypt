@@ -52,7 +52,7 @@ def decryptOldPassword(secret, p):
   o = AES.new(secret, AES.MODE_ECB)
   x = o.decrypt(p)
   assert MAGIC in x
-  return re.findall('(.*)' + MAGIC, x)[0]
+  return re.findall(b'(.*)' + MAGIC, x)[0]
 
 def main():
   if len(sys.argv) != 4:
@@ -67,20 +67,25 @@ def main():
   secret = secret[:-16]
   secret = secret[:16]
 
-  credentials = open(sys.argv[3]).read()
-  passwords = re.findall(r'<password>\{?(.*?)\}?</password>', credentials)
+  credentials = open(sys.argv[3],encoding='utf-8').read()
+  usernames = re.findall(r'<username>(.*?)</username>', credentials)
+  descriptions = re.findall(r'<description>(.*?)</description>', credentials)
+  passwords = re.findall(r'<password>(.*?)</password>', credentials)
 
   # You can find the password format at https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/util/Secret.java#L167-L216
 
-  for password in passwords:
+  creds = zip(usernames, passwords, descriptions)
+  for username, password, description in zip(usernames, passwords, descriptions):
+    print("\nUsername: {0}".format(username),end="")
+    print("\nDescription: {0}".format(description),end="")
+    print("\nPassword: ",end="")
     p = base64.decodestring(bytes(password, 'utf-8'))
 
-    # Get payload version
-    payload_version = p[0]
-    if payload_version == 1:
+    # Newer formats are wrapped in {}
+    if password[0] == "{":
       print(decryptNewPassword(secret, p))
     else: # Assuming we don't have a V2 payload, seeing as current crypto isn't horrible that's a fair assumption
-      print(decryptOldPassword(secret,p))
+      print(decryptOldPassword(secret,p).decode('utf-8'))
 
 if __name__ == '__main__':
   main()
