@@ -68,7 +68,7 @@ def main():
   secret = secret[:16]
 
   credentials = open(sys.argv[3]).read()
-  passwords = re.findall(r'<password>\{?(.*?)\}?</password>', credentials)
+  passwords = re.findall(r'<p(?:assword|rivateKey)>\{?(.*?)\}?</p(?:assword|rivateKey)>', credentials)
 
   # You can find the password format at https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/util/Secret.java#L167-L216
 
