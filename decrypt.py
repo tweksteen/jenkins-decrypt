@@ -73,7 +73,7 @@ def main():
   # You can find the password format at https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/util/Secret.java#L167-L216
 
   for password in passwords:
-    p = base64.decodestring(bytes(password, 'utf-8'))
+    p = base64.decodebytes(bytes(password, 'utf-8'))
 
     # Get payload version
     payload_version = p[0]
