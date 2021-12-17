@@ -2,7 +2,7 @@
 
 import re
 import sys
-import base64
+from base64 import decodebytes as b64_decode
 from hashlib import sha256
 from binascii import hexlify, unhexlify
 from Crypto.Cipher import AES
@@ -73,7 +73,7 @@ def main():
   # You can find the password format at https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/util/Secret.java#L167-L216
 
   for password in passwords:
-    p = base64.decodestring(bytes(password, 'utf-8'))
+    p = b64_decode(bytes(password, 'utf-8'))
 
     # Get payload version
     payload_version = p[0]
