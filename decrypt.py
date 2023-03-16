@@ -67,13 +67,13 @@ def main():
   secret = secret[:-16]
   secret = secret[:16]
 
-  credentials = open(sys.argv[3]).read()
+  credentials = open(sys.argv[3], encoding='utf-8').read()
   passwords = re.findall(r'<p(?:assword|rivateKey)>\{?(.*?)\}?</p(?:assword|rivateKey)>', credentials)
 
   # You can find the password format at https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/util/Secret.java#L167-L216
 
   for password in passwords:
-    p = base64.decodestring(bytes(password, 'utf-8'))
+    p = base64.b64decode(bytes(password, 'utf-8'))
 
     # Get payload version
     payload_version = p[0]
